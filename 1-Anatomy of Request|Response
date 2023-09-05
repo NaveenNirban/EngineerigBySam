@@ -1,0 +1,39 @@
+'''
+    Author : Naveen Nirban
+    Date : 02/September/2023
+    Description : This code first crafts a request payload & then encodes
+                 it into 'utf-8' encoding, sends data to server & prints response.
+'''
+
+import socket
+
+server = "google.com"
+port = 80
+# Create a socket
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    # Connect to the server
+    s.connect((server, port))
+
+    # Define the request
+    request = "GET / HTTP/1.1\r\n"
+    request += f"Host: {server}\r\n"
+    request += "User-Agent: Python\r\n"
+    request += "Connection: close\r\n\r\n"
+
+    print("Request below : ")
+    print(request)
+    print("Response below :")
+    
+
+    # Send the request
+    s.sendall(request.encode())
+
+    # Receive and print the response
+    response = b""
+    while True:
+        data = s.recv(1024)
+        if not data:
+            break
+        response += data
+
+print(response.decode())
