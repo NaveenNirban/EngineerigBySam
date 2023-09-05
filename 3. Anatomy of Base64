@@ -1,0 +1,45 @@
+'''
+    Author: Naveen Nirban
+    Date: 05/September/2023
+    Description: Converts the given string into base64 encoded string(With Padding)
+'''
+# Define the Base64 encoding table
+base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+
+def ascii_to_base64(input_str):
+    result = []
+
+    # Convert the input string to a list of ASCII values
+    ascii_values = [ord(char) for char in input_str]
+
+    # Convert ASCII values to binary strings and pad to 8 bits
+    binary_strings = [format(value, '08b') for value in ascii_values]
+
+    # Join binary strings and split into groups of 6 bits
+    binary_data = ''.join(binary_strings)
+    groups_of_six = [binary_data[i:i + 6] for i in range(0, len(binary_data), 6)]
+
+    # Pad the last group with zeros if needed
+    if len(groups_of_six[-1]) < 6:
+        groups_of_six[-1] += '0' * (6 - len(groups_of_six[-1]))
+
+    # Convert groups of 6 bits to decimal values
+    decimal_values = [int(group, 2) for group in groups_of_six]
+
+    # Map decimal values to Base64 characters
+    for decimal_value in decimal_values:
+        result.append(base64_chars[decimal_value])
+
+    # Calculate the number of padding '=' characters needed
+    padding = 4 - (len(result) % 4) if len(result) % 4 != 0 else 0
+
+    # Add padding '=' characters
+    result.extend(['='] * padding)
+
+    # Join the Base64 characters to form the encoded string
+    encoded_str = ''.join(result)
+    return encoded_str
+# Example usage:
+input_str = "Hi"
+encoded_str = ascii_to_base64(input_str)
+print(encoded_str)
